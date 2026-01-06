@@ -1,14 +1,28 @@
 const std = @import("std");
 
 pub fn main() void {
-    const a: i32 = 4;
-    const b: i32 = 5;
-
-    if (a != b) {
-        std.debug.print("Naah, they aren't equal", .{});
-    } else if (a == 9) {
-        std.debug.print("Look at that they are equal", .{});
-    } else {
-        std.debug.print("Nasty comparision", .{});
+    const today = 6;
+    switch (today) {
+        1 => {
+            std.debug.print("Today is a new year", .{});
+        },
+        2 => {
+            std.debug.print("Today is after new year", .{});
+        },
+        3 => {
+            std.debug.print("Now the year is old", .{});
+        },
+        4 => {
+            std.debug.print("Today is a week after new year", .{});
+        },
+        5 => {
+            std.debug.print("Now today is on a monday", .{});
+        },
+        6 => {
+            std.debug.print("Today is on a Tuesday and I didn't go to school", .{});
+        },
+        else => {
+            std.debug.print("Naah, not what you are looking for", .{});
+        },
     }
 }

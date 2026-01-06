@@ -1,12 +1,16 @@
 const std = @import("std");
 
 pub fn main() void {
-    const maybe: ?i32 = 10;
-    const maybes: ?i32 = null;
+    const items = [_]?i32{ 1, null, 3, null, 5 };
+    var sum: i32 = 0;
 
-    if (maybe and maybes) |x| {
-        std.debug.print("The value is :{}", .{x});
-    } else {
-        std.debug.print("No value yet", .{});
+    for (items) |item| {
+        if (item) |value| {
+            sum += value;
+        } else {
+            std.debug.print("Encountered a null value\n", .{});
+        }
     }
+
+    std.debug.print("Sum of non-null values is: {}\n", .{sum});
 }

@@ -1,13 +1,23 @@
 const std = @import("std");
 
 pub fn main() void {
-    const items = [_]i32{ 1, 2, 3, 5, 6 };
-    const more = [_]i32{ 9, 8, 7, 6, 5 };
+    const items = [_]i32{ 1, 2, 3, 4, 5, 6 };
+
     var sum: i32 = 0;
 
-    for (items, more) |i, j| {
-        sum += i + j;
-    }
+    var stopped_at_index: i32 = 0;
 
-    std.debug.print("The sum is: {}\n", .{sum});
+    const stoped_early = for (0.., items) |index, item| {
+        if (@mod(item, 2) == 0) {
+            stopped_at_index = @intCast(index);
+            break true;
+        }
+        sum += 1;
+    } else false;
+
+    std.debug.print("Sum of items: {}\n", .{sum});
+
+    if (stoped_early) {
+        std.debug.print("Stopped at index: {}\n", .{stopped_at_index});
+    }
 }

@@ -37,10 +37,26 @@ pub fn handle_error(code: ErrorCode) void {
         .Failure => {
             std.debug.print("Failure my brother...", .{});
         },
+        _ => unreachable,
     }
 }
 
+const Data = union {
+    floatValue: f32,
+    intValue: i32,
+    stringValue: []const u8,
+};
+
 pub fn main() void {
+    var res = Data{ .stringValue = "James Muriuki Maina" };
+    std.debug.print("String value: {s}\n", .{res.stringValue});
+
+    res = Data{ .floatValue = 22.5 };
+    std.debug.print("Float value: {}\n", .{res.floatValue});
+
+    res = Data{ .intValue = 22 };
+    std.debug.print("Int value: {}\n", .{res.intValue});
+
     const err: ErrorCode = .Failure;
     handle_error(err);
 }

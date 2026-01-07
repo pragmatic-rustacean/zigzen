@@ -60,7 +60,20 @@ pub fn calculate_results(input: i32) Result {
     }
 }
 
-pub fn main() void {
+const NetworkError = error{
+    ConnectionLost,
+    Timeout,
+    InvalidResponse,
+};
+
+fn fetch_data(url: []const u8) ![]const u8 {
+    if (url.len == 0) {
+        return error.ConnectionLost;
+    }
+    return "Woooh!!!, That's aw3some";
+}
+
+pub fn main() !void {
     // var res = Data{ .stringValue = "James Muriuki Maina" };
     // std.debug.print("String value: {s}\n", .{res.stringValue});
 
@@ -73,10 +86,13 @@ pub fn main() void {
     // const err: ErrorCode = .Failure;
     // handle_error(err);
 
-    const res = calculate_results(10);
+    // const res = calculate_results(10);
 
-    switch (res) {
-        .Success => |value| std.debug.print("Here it is: {d}", .{value}),
-        .Error => |value| std.debug.print("You got yourself some: {s}", .{value}),
-    }
+    // switch (res) {
+    //     .Success => |value| std.debug.print("Here it is: {d}", .{value}),
+    //     .Error => |value| std.debug.print("You got yourself some: {s}", .{value}),
+    // }
+
+    const data = try fetch_data("www.love.com");
+    std.debug.print("Data recieved: {s}", .{data});
 }

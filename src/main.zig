@@ -27,14 +27,20 @@ const trafic_light = enum {
     }
 };
 
-pub fn main() void {
-    const today = day.wednesday;
-    const day_number = @intFromEnum(today);
-    const status_code = http.Ok;
-    const code = @intFromEnum(status_code);
-    std.debug.print("Status code: {}\n", .{code});
+const ErrorCode = enum(i32) { Success = 200, Failure = 400, _ };
 
-    if (today == .wednesday) {
-        std.debug.print("Today is hump day. day number {}!\n", .{day_number + 1});
+pub fn handle_error(code: ErrorCode) void {
+    switch (code) {
+        .Success => {
+            std.debug.print("Success brother...", .{});
+        },
+        .Failure => {
+            std.debug.print("Failure my brother...", .{});
+        },
     }
+}
+
+pub fn main() void {
+    const err: ErrorCode = .Failure;
+    handle_error(err);
 }

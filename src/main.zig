@@ -47,16 +47,36 @@ const Data = union {
     stringValue: []const u8,
 };
 
+const Result = union(enum) {
+    Success: i32,
+    Error: []const u8,
+};
+
+pub fn calculate_results(input: i32) Result {
+    if (input > 3) {
+        return Result{ .Success = input };
+    } else {
+        return Result{ .Error = "Naah brah" };
+    }
+}
+
 pub fn main() void {
-    var res = Data{ .stringValue = "James Muriuki Maina" };
-    std.debug.print("String value: {s}\n", .{res.stringValue});
+    // var res = Data{ .stringValue = "James Muriuki Maina" };
+    // std.debug.print("String value: {s}\n", .{res.stringValue});
 
-    res = Data{ .floatValue = 22.5 };
-    std.debug.print("Float value: {}\n", .{res.floatValue});
+    // res = Data{ .floatValue = 22.5 };
+    // std.debug.print("Float value: {}\n", .{res.floatValue});
 
-    res = Data{ .intValue = 22 };
-    std.debug.print("Int value: {}\n", .{res.intValue});
+    // res = Data{ .intValue = 22 };
+    // std.debug.print("Int value: {}\n", .{res.intValue});
 
-    const err: ErrorCode = .Failure;
-    handle_error(err);
+    // const err: ErrorCode = .Failure;
+    // handle_error(err);
+
+    const res = calculate_results(10);
+
+    switch (res) {
+        .Success => |value| std.debug.print("Here it is: {d}", .{value}),
+        .Error => |value| std.debug.print("You got yourself some: {s}", .{value}),
+    }
 }

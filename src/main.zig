@@ -73,26 +73,97 @@ fn fetch_data(url: []const u8) ![]const u8 {
     return "Woooh!!!, That's aw3some";
 }
 
-pub fn main() !void {
-    // var res = Data{ .stringValue = "James Muriuki Maina" };
-    // std.debug.print("String value: {s}\n", .{res.stringValue});
+const ParseError = error{
+    InvalidFormat,
+    Overflow,
+};
 
-    // res = Data{ .floatValue = 22.5 };
-    // std.debug.print("Float value: {}\n", .{res.floatValue});
-
-    // res = Data{ .intValue = 22 };
-    // std.debug.print("Int value: {}\n", .{res.intValue});
-
-    // const err: ErrorCode = .Failure;
-    // handle_error(err);
-
-    // const res = calculate_results(10);
-
-    // switch (res) {
-    //     .Success => |value| std.debug.print("Here it is: {d}", .{value}),
-    //     .Error => |value| std.debug.print("You got yourself some: {s}", .{value}),
-    // }
-
-    const data = try fetch_data("www.love.com");
-    std.debug.print("Data recieved: {s}", .{data});
+pub fn parse_float(input: []const u8) ParseError!f64 {
+    const result = std.fmt.parseFloat(f64, input) catch |err| {
+        return switch (err) {
+            // std.fmt.ParseFloatError.
+        };
+    };
+    std.debug.print("{}", .{result});
 }
+
+pub fn main() !void {
+    var array = [_]u8{ 1, 2, 3, 4, 5, 6 };
+    const item = 0;
+    _ = &item;
+
+    const slice = array[item .. array.len - 1];
+    std.debug.print("I am a slice: {s}", .{slice});
+
+    const Structor = struct {
+        name: []const u8,
+        age: u16,
+        sex: []const u8,
+    };
+
+    const res: Structor = .{ .age = 22, .name = "James", .sex = "male" };
+    std.debug.print("This is my info: {}", .{res});
+}
+
+test "James is a dick, I don't know why He keep on getting rejected by ugly and unattractive girls" {
+    try std.testing.expect(true);
+}
+
+test "managing players health using pointers" {
+    const james_health: i32 = 10;
+    const james_health_ptr = &james_health;
+    try std.testing.expect(james_health_ptr.* == 10);
+    try std.testing.expect(@TypeOf(james_health_ptr) == *const i32);
+
+    var player_health: i32 = 100;
+    const player_health_ptr = &player_health;
+    try std.testing.expect(player_health_ptr.* == 100);
+    try std.testing.expect(@TypeOf(player_health_ptr) == *i32);
+
+    player_health_ptr.* -= 10;
+    try std.testing.expect(player_health_ptr.* == 90);
+    try std.testing.expect(player_health == 90);
+}
+
+test "Slicing syntax on pointers" {
+    var age: i32 = 22;
+    const age_ptr = &age;
+    const age_array_ptr = age_ptr[0..1];
+    const age_many_ptr: [*]i32 = age_array_ptr;
+
+    try std.testing.expect(@TypeOf(age_many_ptr) == [*]i32);
+    try std.testing.expect(age_many_ptr[0] == 22);
+}
+
+test "pointer arithmetics" {
+    const students = [_]u8{ "James", "Mercy", "Joy", "Tony" };
+    var names: [*]const u8 = &students;
+    try std.testing.expectEqualStrings(names[0], "James");
+    names += 1;
+    try std.testing.expectEqualStrings(names[0], "Mercy");
+}
+
+pub fn enchanted_forest(allocator: std.mem.Allocator) std.mem.Allocator.Error![]u8 {
+    var chants: [5]u8 = .{ 'S', 'l', 'a', 's', 'h' };
+    const chants_copy = try allocator.alloc(std.mem.Allocator, u8, chants.len);
+    @memcpy(chants_copy, &chants);
+    return chants_copy;
+}
+
+const Sword = struct {
+    stats: []u8,
+    pub fn init(allocator: std.mem.Allocator, stats: []const u8) !*Sword {
+        const sword_ptr = try allocator.create(Sword);
+        errdefer allocator.destroy(sword_ptr);
+        sword_ptr.stats = try allocator.alloc(u8, stats.len);
+        @memcpy(sword_ptr, stats);
+        return sword_ptr;
+    }
+
+    pub fn deinit(self: *Sword, allocator: std.mem.Allocator) void {
+        // Free the memory for the stats.
+        allocator.free(self.stats);
+        // Destroy the struct itself
+        allocator.destroy(self);
+    }
+};
